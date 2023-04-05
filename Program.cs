@@ -1,46 +1,75 @@
-using Bogus;
+using DotNETGraphQLWorkshop.Data;
+using Microsoft.EntityFrameworkCore;
+using DbUp;
+using System.Reflection;
+using DotNETGraphQLWorkshop.Data.Entities;
+using DotNETGraphQLWorkshop.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var mainFolder = typeof(Program).Assembly.Location;
 
-var bookRepo = new Repository<Book>();
-var authorRepo = new Repository<Author>();
+var dbContextOptions = new DbContextOptionsBuilder<DataContext>().UseSqlite("Data Source=demo.db").Options;
 
-var books = Seeder.GetBookGenerator().Generate(10);
-var authors = books.Where(b => b.Author != null).Select(b => b.Author!);
+builder.Services.AddDbContext<DataContext>(opts => opts.UseSqlite("Data Source=demodatabase/demo.db"));
+builder.Services.AddTransient<IRepository<Book>, Repository<Book>>();
+builder.Services.AddTransient<IRepository<Author>, Repository<Author>>();
 
-bookRepo.AddRange(books);
-authorRepo.AddRange(authors);
-
-builder.Services.AddSingleton<Repository<Book>>(bookRepo);
-builder.Services.AddSingleton<Repository<Author>>(authorRepo);
-
-// Seed(builder.Services);
 
 builder.Services
     .AddGraphQLServer()
+    .RegisterDbContext<DataContext>()
     .AddQueryType<Query>()
-    .AddFiltering();
+    //.AddType<AuthorType>()
+    .AddFiltering()
+    .AddProjections()
+    .AddSorting();
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+ConfigureDatabase(app.Services);
+
+app.MapGet("/", () => "Hello GraphQL Demo!");
 
 app.MapGraphQL();
 
 app.Run();
 
 
-void Seed(IServiceCollection servicesCollection)
+void ConfigureDatabase(IServiceProvider services)
 {
-    var services = servicesCollection.BuildServiceProvider();
-    var bookRepo = services.GetRequiredService<Repository<Book>>();
-    var authorRepo = services.GetRequiredService<Repository<Author>>();
+    using var scope = services.CreateScope();
 
-    var books = Seeder.GetBookGenerator().Generate(10);
-    var authors = books.Where(b => b.Author != null).Select(b => b.Author!);
+    PrepareDatabase(scope.ServiceProvider);
 
-    bookRepo.AddRange(books);
-    authorRepo.AddRange(authors);
+    Seed(scope.ServiceProvider);
 }
 
+void PrepareDatabase(IServiceProvider services)
+{
+    var dbContext = services.GetRequiredService<DataContext>();
+    dbContext.Database.EnsureDeleted();
+    dbContext.Database.EnsureCreated();
+
+    var upgrader = DeployChanges.To
+            .SQLiteDatabase(dbContext.Database.GetConnectionString())
+            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+            .LogToConsole()
+            .Build();
+
+    var result = upgrader.PerformUpgrade();
+
+    if (!result.Successful)
+    {
+        throw new Exception(result.ErrorScript.Name, result.Error);
+    }
+}
+
+void Seed(IServiceProvider services)
+{
+    var authorRepo = services.GetRequiredService<IRepository<Author>>();
+
+    var generatedEntities = Seeder.GetAuthorGenerator().Generate(1000);
+
+    authorRepo.AddRange(generatedEntities);
+}

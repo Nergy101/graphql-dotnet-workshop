@@ -8,8 +8,19 @@
 
   <ItemGroup>
     <PackageReference Include="Bogus" Version="34.0.2" />
+    <PackageReference Include="dbup-sqlite" Version="5.0.8" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="13.0.5" />
     <PackageReference Include="HotChocolate.Data" Version="13.0.5" />
+    <PackageReference Include="HotChocolate.Data.EntityFramework" Version="13.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DotNETGraphQLWorkshop.Data\DotNETGraphQLWorkshop.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="demodatabase\" />
   </ItemGroup>
 
 </Project>
