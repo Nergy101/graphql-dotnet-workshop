@@ -1,0 +1,12 @@
+C:\Users\chris\Code\graphql\DotNETGraphQLWorkshop\src\DotNETGraphQLWorkshop.Data\bin\Debug\net6.0\DotNETGraphQLWorkshop.Data.deps.json
+C:\Users\chris\Code\graphql\DotNETGraphQLWorkshop\src\DotNETGraphQLWorkshop.Data\bin\Debug\net6.0\DotNETGraphQLWorkshop.Data.dll
+C:\Users\chris\Code\graphql\DotNETGraphQLWorkshop\src\DotNETGraphQLWorkshop.Data\bin\Debug\net6.0\DotNETGraphQLWorkshop.Data.pdb
+C:\Users\chris\Code\graphql\DotNETGraphQLWorkshop\src\DotNETGraphQLWorkshop.Data\obj\Debug\net6.0\DotNETGraphQLWorkshop.Data.csproj.AssemblyReference.cache
+C:\Users\chris\Code\graphql\DotNETGraphQLWorkshop\src\DotNETGraphQLWorkshop.Data\obj\Debug\net6.0\DotNETGraphQLWorkshop.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\chris\Code\graphql\DotNETGraphQLWorkshop\src\DotNETGraphQLWorkshop.Data\obj\Debug\net6.0\DotNETGraphQLWorkshop.Data.AssemblyInfoInputs.cache
+C:\Users\chris\Code\graphql\DotNETGraphQLWorkshop\src\DotNETGraphQLWorkshop.Data\obj\Debug\net6.0\DotNETGraphQLWorkshop.Data.AssemblyInfo.cs
+C:\Users\chris\Code\graphql\DotNETGraphQLWorkshop\src\DotNETGraphQLWorkshop.Data\obj\Debug\net6.0\DotNETGraphQLWorkshop.Data.csproj.CoreCompileInputs.cache
+C:\Users\chris\Code\graphql\DotNETGraphQLWorkshop\src\DotNETGraphQLWorkshop.Data\obj\Debug\net6.0\DotNETGraphQLWorkshop.Data.dll
+C:\Users\chris\Code\graphql\DotNETGraphQLWorkshop\src\DotNETGraphQLWorkshop.Data\obj\Debug\net6.0\refint\DotNETGraphQLWorkshop.Data.dll
+C:\Users\chris\Code\graphql\DotNETGraphQLWorkshop\src\DotNETGraphQLWorkshop.Data\obj\Debug\net6.0\DotNETGraphQLWorkshop.Data.pdb
+C:\Users\chris\Code\graphql\DotNETGraphQLWorkshop\src\DotNETGraphQLWorkshop.Data\obj\Debug\net6.0\ref\DotNETGraphQLWorkshop.Data.dll
