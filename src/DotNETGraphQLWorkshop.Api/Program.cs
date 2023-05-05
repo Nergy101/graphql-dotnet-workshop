@@ -1,9 +1,12 @@
-using DotNETGraphQLWorkshop.Data;
-using Microsoft.EntityFrameworkCore;
 using DbUp;
-using System.Reflection;
+using DotNETGraphQLWorkshop.API.GraphQL.Mutation;
+using DotNETGraphQLWorkshop.API.GraphQL.Subscription;
+using DotNETGraphQLWorkshop.Data;
 using DotNETGraphQLWorkshop.Data.Entities;
 using DotNETGraphQLWorkshop.Data.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,12 +18,22 @@ builder.Services.AddDbContext<DataContext>(opts => opts.UseSqlite("Data Source=d
 builder.Services.AddTransient<IRepository<Book>, Repository<Book>>();
 builder.Services.AddTransient<IRepository<Author>, Repository<Author>>();
 
-
 builder.Services
+.AddCors(opts =>
+
+    opts.AddPolicy(name: "custom",
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:4200");
+                          policy.AllowAnyHeader();
+                          policy.AllowAnyMethod();
+                      })
+    )
     .AddGraphQLServer()
     .RegisterDbContext<DataContext>()
     .AddQueryType<Query>()
-    //.AddType<AuthorType>()
+    .AddMutationType<Mutation>()
+    .AddSubscriptionType<Subscription>()
     .AddFiltering()
     .AddProjections()
     .AddSorting();
@@ -29,12 +42,13 @@ var app = builder.Build();
 
 ConfigureDatabase(app.Services);
 
+app.UseCors("custom");
+
 app.MapGet("/", () => "Hello GraphQL Demo!");
 
 app.MapGraphQL();
 
 app.Run();
-
 
 void ConfigureDatabase(IServiceProvider services)
 {

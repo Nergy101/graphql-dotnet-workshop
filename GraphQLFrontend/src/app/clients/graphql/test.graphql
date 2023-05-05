@@ -1,0 +1,8 @@
+query BooksTesting {
+  books {
+    nodes {
+      id
+      title
+    }
+  }
+}
