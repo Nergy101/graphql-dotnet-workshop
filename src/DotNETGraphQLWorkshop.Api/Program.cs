@@ -1,11 +1,9 @@
 using DbUp;
-using DotNETGraphQLWorkshop.API.GraphQL.Mutation;
-using DotNETGraphQLWorkshop.API.GraphQL.Subscription;
+using DotNETGraphQLWorkshop.API.GraphQL;
 using DotNETGraphQLWorkshop.Data;
 using DotNETGraphQLWorkshop.Data.Entities;
 using DotNETGraphQLWorkshop.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,10 +28,15 @@ builder.Services
                       })
     )
     .AddGraphQLServer()
+    // Add Subscription support (WebSockets)
+    .AddInMemorySubscriptions()
+    // Integrate EF
     .RegisterDbContext<DataContext>()
+    // Add Root GraphQL types
     .AddQueryType<Query>()
     .AddMutationType<Mutation>()
     .AddSubscriptionType<Subscription>()
+    // Add middlewares
     .AddFiltering()
     .AddProjections()
     .AddSorting();
@@ -41,6 +44,8 @@ builder.Services
 var app = builder.Build();
 
 ConfigureDatabase(app.Services);
+
+app.UseWebSockets(new WebSocketOptions());
 
 app.UseCors("custom");
 

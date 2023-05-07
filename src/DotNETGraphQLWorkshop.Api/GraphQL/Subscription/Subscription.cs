@@ -1,6 +1,6 @@
 ﻿using DotNETGraphQLWorkshop.Data.Entities;
 
-namespace DotNETGraphQLWorkshop.API.GraphQL.Subscription
+namespace DotNETGraphQLWorkshop.API.GraphQL
 {
     public class Subscription
     {
