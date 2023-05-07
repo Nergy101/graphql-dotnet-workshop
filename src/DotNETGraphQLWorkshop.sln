@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNETGraphQLWorkshop.Data"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotNETGraphQLWorkshop.API", "DotNETGraphQLWorkshop.Api\DotNETGraphQLWorkshop.API.csproj", "{D999D06D-4731-4C1C-8FC5-91FBBC94A30E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNETGraphQLWorkshop.ConsoleApp", "DotNETGraphQLWorkshop.ConsoleApp\DotNETGraphQLWorkshop.ConsoleApp.csproj", "{B74B5852-0D4F-48CA-BD6E-CC0A6EF05C31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D999D06D-4731-4C1C-8FC5-91FBBC94A30E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D999D06D-4731-4C1C-8FC5-91FBBC94A30E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D999D06D-4731-4C1C-8FC5-91FBBC94A30E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B74B5852-0D4F-48CA-BD6E-CC0A6EF05C31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B74B5852-0D4F-48CA-BD6E-CC0A6EF05C31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B74B5852-0D4F-48CA-BD6E-CC0A6EF05C31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B74B5852-0D4F-48CA-BD6E-CC0A6EF05C31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,16 +1,20 @@
-using DbUp;
+﻿using DbUp;
 using DotNETGraphQLWorkshop.API.GraphQL;
 using DotNETGraphQLWorkshop.Data;
 using DotNETGraphQLWorkshop.Data.Entities;
 using DotNETGraphQLWorkshop.Data.Repositories;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var mainFolder = typeof(Program).Assembly.Location;
 
-builder.Services.AddDbContext<DataContext>(opts => opts.UseSqlite("Data Source=demodatabase/demo.db"));
+builder.Services.AddDbContext<DataContext>(opts => opts.UseSqlite("Data Source=./demodatabase/demo.db"));
 builder.Services.AddTransient<IRepository<Book>, Repository<Book>>();
 builder.Services.AddTransient<IRepository<Author>, Repository<Author>>();
 
@@ -40,21 +44,22 @@ builder.Services
     .AddSorting()
     .AddInMemorySubscriptions();
 
+builder.WebHost.UseUrls("http://localhost:64147/", "https://localhost:64148/");
 var app = builder.Build();
+
+app.UseRouting();
+app.UseWebSockets();
 
 ConfigureDatabase(app.Services);
 
-app.UseCors("custom");
 
-app.UseWebSockets();
-app.UseRouting();
+//app.UseCors("custom");
+app.UseCors(opts => opts.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
-app.UseEndpoints(endpoints =>
-{
-    app.MapGet("/", () => "Hello GraphQL Demo!");
-    app.MapGraphQLWebSocket();
-    endpoints.MapGraphQL();
-});
+app.MapGet("/", () => "Hello GraphQL Demo!");
+
+app.MapGraphQL();
+app.MapGraphQLWebSocket();
 
 app.Run();
 
@@ -95,3 +100,5 @@ void Seed(IServiceProvider services)
 
     authorRepo.AddRange(generatedEntities);
 }
+
+

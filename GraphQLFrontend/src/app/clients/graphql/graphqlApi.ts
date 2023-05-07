@@ -1,6 +1,7 @@
 import { gql } from 'apollo-angular';
 import { Injectable } from '@angular/core';
 import * as Apollo from 'apollo-angular';
+import * as ApolloCore from '@apollo/client/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -286,6 +287,13 @@ export type UuidOperationFilterInput = {
   nlte?: InputMaybe<Scalars['UUID']>;
 };
 
+export type AddBookMutationVariables = Exact<{
+  bookInput: BookInput;
+}>;
+
+
+export type AddBookMutation = { __typename?: 'Mutation', addBook: { __typename?: 'Book', id: any, title?: string | null } };
+
 export type BooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -296,6 +304,25 @@ export type BooksAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 export type BooksAddedSubscription = { __typename?: 'Subscription', bookAdded: { __typename?: 'Book', id: any, title?: string | null } };
 
+export const AddBookDocument = gql`
+    mutation AddBook($bookInput: BookInput!) {
+  addBook(book: $bookInput) {
+    id
+    title
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddBookMutationService extends Apollo.Mutation<AddBookMutation, AddBookMutationVariables> {
+    override document = AddBookDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const BooksDocument = gql`
     query Books {
   books {
@@ -307,16 +334,16 @@ export const BooksDocument = gql`
 }
     `;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class BooksGQL extends Apollo.Query<BooksQuery, BooksQueryVariables> {
-  override document = BooksDocument;
-
-  constructor(apollo: Apollo.Apollo) {
-    super(apollo);
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class BooksQueryService extends Apollo.Query<BooksQuery, BooksQueryVariables> {
+    override document = BooksDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
   }
-}
 export const BooksAddedDocument = gql`
     subscription BooksAdded {
   bookAdded {
@@ -326,13 +353,48 @@ export const BooksAddedDocument = gql`
 }
     `;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class BooksAddedGQL extends Apollo.Subscription<BooksAddedSubscription, BooksAddedSubscriptionVariables> {
-  override document = BooksAddedDocument;
-
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class BooksAddedSubscriptionService extends Apollo.Subscription<BooksAddedSubscription, BooksAddedSubscriptionVariables> {
+    override document = BooksAddedDocument;
+    
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
+    }
+  }
+
+  type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+
+  interface WatchQueryOptionsAlone<V> extends Omit<ApolloCore.WatchQueryOptions<V>, 'query' | 'variables'> {}
+
+  interface QueryOptionsAlone<V> extends Omit<ApolloCore.QueryOptions<V>, 'query' | 'variables'> {}
+
+  interface MutationOptionsAlone<T, V> extends Omit<ApolloCore.MutationOptions<T, V>, 'mutation' | 'variables'> {}
+
+  interface SubscriptionOptionsAlone<V> extends Omit<ApolloCore.SubscriptionOptions<V>, 'query' | 'variables'> {}
+
+  @Injectable({ providedIn: 'root' })
+  export class GraphQLClient {
+    constructor(
+      private addBookMutationService: AddBookMutationService,
+      private booksQueryService: BooksQueryService,
+      private booksAddedSubscriptionService: BooksAddedSubscriptionService
+    ) {}
+      
+    addBook(variables: AddBookMutationVariables, options?: MutationOptionsAlone<AddBookMutation, AddBookMutationVariables>) {
+      return this.addBookMutationService.mutate(variables, options)
+    }
+    
+    books(variables?: BooksQueryVariables, options?: QueryOptionsAlone<BooksQueryVariables>) {
+      return this.booksQueryService.fetch(variables, options)
+    }
+    
+    booksWatch(variables?: BooksQueryVariables, options?: WatchQueryOptionsAlone<BooksQueryVariables>) {
+      return this.booksQueryService.watch(variables, options)
+    }
+    
+    booksAdded(variables?: BooksAddedSubscriptionVariables, options?: SubscriptionOptionsAlone<BooksAddedSubscriptionVariables>) {
+      return this.booksAddedSubscriptionService.subscribe(variables, options)
     }
   }
