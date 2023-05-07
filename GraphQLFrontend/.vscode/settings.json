@@ -1,0 +1,11 @@
+{
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "GraphQLDemo",
+      "database": "C:\\Users\\c.dijk\\Code\\graphql-dotnet-workshop\\src\\DotNETGraphQLWorkshop.Api\\demodatabase\\demo.db"
+    }
+  ],
+  "sqltools.useNodeRuntime": true
+}

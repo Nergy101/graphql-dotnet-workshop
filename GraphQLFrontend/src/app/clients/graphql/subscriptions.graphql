@@ -1,0 +1,6 @@
+subscription BooksAdded {
+  bookAdded {
+    id
+    title
+  }
+}

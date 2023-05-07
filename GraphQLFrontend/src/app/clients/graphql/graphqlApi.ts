@@ -286,13 +286,18 @@ export type UuidOperationFilterInput = {
   nlte?: InputMaybe<Scalars['UUID']>;
 };
 
-export type BooksTestingQueryVariables = Exact<{ [key: string]: never; }>;
+export type BooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type BooksTestingQuery = { __typename?: 'Query', books?: { __typename?: 'BooksConnection', nodes?: Array<{ __typename?: 'Book', id: any, title?: string | null }> | null } | null };
+export type BooksQuery = { __typename?: 'Query', books?: { __typename?: 'BooksConnection', nodes?: Array<{ __typename?: 'Book', id: any, title?: string | null }> | null } | null };
 
-export const BooksTestingDocument = gql`
-    query BooksTesting {
+export type BooksAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BooksAddedSubscription = { __typename?: 'Subscription', bookAdded: { __typename?: 'Book', id: any, title?: string | null } };
+
+export const BooksDocument = gql`
+    query Books {
   books {
     nodes {
       id
@@ -305,10 +310,29 @@ export const BooksTestingDocument = gql`
 @Injectable({
   providedIn: 'root'
 })
-export class BooksTestingGQL extends Apollo.Query<BooksTestingQuery, BooksTestingQueryVariables> {
-  override document = BooksTestingDocument;
+export class BooksGQL extends Apollo.Query<BooksQuery, BooksQueryVariables> {
+  override document = BooksDocument;
 
   constructor(apollo: Apollo.Apollo) {
     super(apollo);
   }
 }
+export const BooksAddedDocument = gql`
+    subscription BooksAdded {
+  bookAdded {
+    id
+    title
+  }
+}
+    `;
+
+@Injectable({
+  providedIn: 'root'
+})
+export class BooksAddedGQL extends Apollo.Subscription<BooksAddedSubscription, BooksAddedSubscriptionVariables> {
+  override document = BooksAddedDocument;
+
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
