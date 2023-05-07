@@ -7,6 +7,7 @@ CREATE TABLE Books (
 	Id TEXT PRIMARY KEY NOT NULL,
    	Title TEXT NOT NULL,
 	AuthorId TEXT NULL,
+	CreatedAt DateTime2 NOT NULL,
 	FOREIGN KEY(Id) REFERENCES Authors(Id)
 )
 

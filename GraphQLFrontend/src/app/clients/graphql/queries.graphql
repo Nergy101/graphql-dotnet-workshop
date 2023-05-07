@@ -3,6 +3,17 @@ query Books {
     nodes {
       id
       title
+      createdAt
+    }
+  }
+}
+
+query BooksSorted($sorting: [BookSortInput!]) {
+  books2(order: $sorting) {
+    nodes {
+      id
+      title
+      createdAt
     }
   }
 }

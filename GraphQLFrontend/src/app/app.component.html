@@ -1,26 +1,68 @@
-<div class="container-fluid" role="main">
-  <div class="grid">
-    <div>
-      <h1>{{ (lastAddedBook$ | async) ?? "No new books added" }}</h1>
-    </div>
-    <div>
-      <ul>
-        <li *ngFor="let title of bookTitles$ | async">
-          {{ title }}
-        </li>
-      </ul>
-    </div>
-    <div>
-      <h1>WATCH</h1>
-      <ul>
-        <li *ngFor="let title of bookTitlesWatch$ | async">
-          {{ title }}
-        </li>
-      </ul>
-    </div>
-  </div>
+<div class="container-fluid" role="main" *ngIf="loading">
+  <button aria-busy="true">Please wait…</button>
 </div>
 
-<button mat-raised-button (click)="addBook()">Add Book</button>
+<div class="container" role="main" *ngIf="!loading">
+  <h1>
+    {{ (lastAddedBookTitle$ | async) ?? "No book added yet this session..." }}
+  </h1>
+
+  <section>
+    <form>
+      <div class="grid">
+        <label for="Title">
+          Title
+          <input
+            type="text"
+            id="Title"
+            name="Title"
+            placeholder="Title"
+            required
+            [(ngModel)]="bookTitle"
+          />
+        </label>
+      </div>
+      <button (click)="addBook()">Add Book</button>
+    </form>
+  </section>
+
+  <section>
+    <h6>WATCH (GQL CACHE CHANGES)</h6>
+    <button (click)="fetchBooks()">Refetch now (default timeout: 10s)</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Created At</th>
+          <th scope="col">Title</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let book of bookWatch$ | async">
+          <td>{{ book.createdAt }}</td>
+          <td>{{ book.title }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h6>FETCH (once)</h6>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Created At</th>
+          <th scope="col">Title</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let book of books$ | async">
+          <td>{{ book.createdAt }}</td>
+          <td>{{ book.title }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
 
 <router-outlet></router-outlet>

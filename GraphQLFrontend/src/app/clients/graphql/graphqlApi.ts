@@ -14,6 +14,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The `DateTime` scalar represents an ISO-8601 compliant date time type. */
+  DateTime: any;
   UUID: any;
 };
 
@@ -31,12 +33,6 @@ export type AuthorFilterInput = {
   fullName?: InputMaybe<StringOperationFilterInput>;
   id?: InputMaybe<UuidOperationFilterInput>;
   or?: InputMaybe<Array<AuthorFilterInput>>;
-};
-
-export type AuthorInput = {
-  books: Array<BookInput>;
-  fullName?: InputMaybe<Scalars['String']>;
-  id: Scalars['UUID'];
 };
 
 export type AuthorSortInput = {
@@ -91,6 +87,7 @@ export type AuthorsEdge = {
 export type Book = {
   __typename?: 'Book';
   author?: Maybe<Author>;
+  createdAt: Scalars['DateTime'];
   id: Scalars['UUID'];
   title?: Maybe<Scalars['String']>;
 };
@@ -98,19 +95,15 @@ export type Book = {
 export type BookFilterInput = {
   and?: InputMaybe<Array<BookFilterInput>>;
   author?: InputMaybe<AuthorFilterInput>;
+  createdAt?: InputMaybe<DateTimeOperationFilterInput>;
   id?: InputMaybe<UuidOperationFilterInput>;
   or?: InputMaybe<Array<BookFilterInput>>;
   title?: InputMaybe<StringOperationFilterInput>;
 };
 
-export type BookInput = {
-  author?: InputMaybe<AuthorInput>;
-  id: Scalars['UUID'];
-  title?: InputMaybe<Scalars['String']>;
-};
-
 export type BookSortInput = {
   author?: InputMaybe<AuthorSortInput>;
+  createdAt?: InputMaybe<SortEnumType>;
   id?: InputMaybe<SortEnumType>;
   title?: InputMaybe<SortEnumType>;
 };
@@ -159,6 +152,25 @@ export type BooksEdge = {
   node: Book;
 };
 
+export type CreateBookInput = {
+  title: Scalars['String'];
+};
+
+export type DateTimeOperationFilterInput = {
+  eq?: InputMaybe<Scalars['DateTime']>;
+  gt?: InputMaybe<Scalars['DateTime']>;
+  gte?: InputMaybe<Scalars['DateTime']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  lt?: InputMaybe<Scalars['DateTime']>;
+  lte?: InputMaybe<Scalars['DateTime']>;
+  neq?: InputMaybe<Scalars['DateTime']>;
+  ngt?: InputMaybe<Scalars['DateTime']>;
+  ngte?: InputMaybe<Scalars['DateTime']>;
+  nin?: InputMaybe<Array<InputMaybe<Scalars['DateTime']>>>;
+  nlt?: InputMaybe<Scalars['DateTime']>;
+  nlte?: InputMaybe<Scalars['DateTime']>;
+};
+
 export type ListFilterInputTypeOfBookFilterInput = {
   all?: InputMaybe<BookFilterInput>;
   any?: InputMaybe<Scalars['Boolean']>;
@@ -173,7 +185,7 @@ export type Mutation = {
 
 
 export type MutationAddBookArgs = {
-  book: BookInput;
+  book: CreateBookInput;
 };
 
 /** Information about pagination in a connection. */
@@ -288,7 +300,7 @@ export type UuidOperationFilterInput = {
 };
 
 export type AddBookMutationVariables = Exact<{
-  bookInput: BookInput;
+  bookInput: CreateBookInput;
 }>;
 
 
@@ -297,7 +309,14 @@ export type AddBookMutation = { __typename?: 'Mutation', addBook: { __typename?:
 export type BooksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type BooksQuery = { __typename?: 'Query', books?: { __typename?: 'BooksConnection', nodes?: Array<{ __typename?: 'Book', id: any, title?: string | null }> | null } | null };
+export type BooksQuery = { __typename?: 'Query', books?: { __typename?: 'BooksConnection', nodes?: Array<{ __typename?: 'Book', id: any, title?: string | null, createdAt: any }> | null } | null };
+
+export type BooksSortedQueryVariables = Exact<{
+  sorting?: InputMaybe<Array<BookSortInput> | BookSortInput>;
+}>;
+
+
+export type BooksSortedQuery = { __typename?: 'Query', books2?: { __typename?: 'Books2Connection', nodes?: Array<{ __typename?: 'Book', id: any, title?: string | null, createdAt: any }> | null } | null };
 
 export type BooksAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -305,7 +324,7 @@ export type BooksAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 export type BooksAddedSubscription = { __typename?: 'Subscription', bookAdded: { __typename?: 'Book', id: any, title?: string | null } };
 
 export const AddBookDocument = gql`
-    mutation AddBook($bookInput: BookInput!) {
+    mutation AddBook($bookInput: CreateBookInput!) {
   addBook(book: $bookInput) {
     id
     title
@@ -329,6 +348,7 @@ export const BooksDocument = gql`
     nodes {
       id
       title
+      createdAt
     }
   }
 }
@@ -339,6 +359,28 @@ export const BooksDocument = gql`
   })
   export class BooksQueryService extends Apollo.Query<BooksQuery, BooksQueryVariables> {
     override document = BooksDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const BooksSortedDocument = gql`
+    query BooksSorted($sorting: [BookSortInput!]) {
+  books2(order: $sorting) {
+    nodes {
+      id
+      title
+      createdAt
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class BooksSortedQueryService extends Apollo.Query<BooksSortedQuery, BooksSortedQueryVariables> {
+    override document = BooksSortedDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -379,6 +421,7 @@ export const BooksAddedDocument = gql`
     constructor(
       private addBookMutationService: AddBookMutationService,
       private booksQueryService: BooksQueryService,
+      private booksSortedQueryService: BooksSortedQueryService,
       private booksAddedSubscriptionService: BooksAddedSubscriptionService
     ) {}
       
@@ -392,6 +435,14 @@ export const BooksAddedDocument = gql`
     
     booksWatch(variables?: BooksQueryVariables, options?: WatchQueryOptionsAlone<BooksQueryVariables>) {
       return this.booksQueryService.watch(variables, options)
+    }
+    
+    booksSorted(variables?: BooksSortedQueryVariables, options?: QueryOptionsAlone<BooksSortedQueryVariables>) {
+      return this.booksSortedQueryService.fetch(variables, options)
+    }
+    
+    booksSortedWatch(variables?: BooksSortedQueryVariables, options?: WatchQueryOptionsAlone<BooksSortedQueryVariables>) {
+      return this.booksSortedQueryService.watch(variables, options)
     }
     
     booksAdded(variables?: BooksAddedSubscriptionVariables, options?: SubscriptionOptionsAlone<BooksAddedSubscriptionVariables>) {
