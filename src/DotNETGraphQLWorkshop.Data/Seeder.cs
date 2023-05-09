@@ -11,7 +11,7 @@ namespace DotNETGraphQLWorkshop.Data
             => new Faker<Book>()
                 .UseSeed(Seed)
                 .RuleFor(b => b.Id, f => Guid.NewGuid())
-                .RuleFor(b => b.Title, f => f.Lorem.Sentence());
+                .RuleFor(b => b.Title, f => f.Hacker.Phrase());
 
         public static Faker<Author> GetAuthorGenerator()
             => new Faker<Author>()

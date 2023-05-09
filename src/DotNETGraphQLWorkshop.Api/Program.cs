@@ -10,7 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var mainFolder = typeof(Program).Assembly.Location;
 
-builder.Services.AddDbContext<DataContext>(opts => opts.UseSqlite("Data Source=demodatabase/demo.db"));
+builder.Services.AddDbContext<DataContext>(
+    opts => opts.UseSqlite("Data Source=demodatabase/demo.db"));
 builder.Services.AddTransient<IRepository<Book>, Repository<Book>>();
 builder.Services.AddTransient<IRepository<Author>, Repository<Author>>();
 
@@ -20,15 +21,13 @@ builder.Services
     opts.AddPolicy(name: "custom",
                       policy =>
                       {
-                          //policy.WithOrigins("http://localhost:4200");
-                          policy.AllowAnyOrigin();
+                          policy.WithOrigins("http://localhost:4200");
                           policy.AllowAnyHeader();
                           policy.AllowAnyMethod();
                       })
     )
     .AddGraphQLServer()
-    // Add Subscription support (WebSockets)
-    // Integrate EF
+    // Add Subscription support (WebSockets) Integrate EF
     .RegisterDbContext<DataContext>()
     // Add Root GraphQL types
     .AddQueryType<Query>()

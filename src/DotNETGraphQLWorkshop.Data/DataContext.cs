@@ -10,6 +10,18 @@ namespace DotNETGraphQLWorkshop.Data
         }
 
         public DbSet<Book> Books { get; set; }
+
         public DbSet<Author> Author { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Author>()
+                .Navigation(e => e.Books)
+                .AutoInclude();
+
+            modelBuilder.Entity<Book>()
+                .Navigation(b => b.Author)
+                .AutoInclude();
+        }
     }
 }

@@ -9,8 +9,6 @@ namespace DotNETGraphQLWorkshop.API.GraphQL
     {
         public async Task<Book> AddBook(CreateBookInput book, [Service] DataContext context, [Service] ITopicEventSender sender)
         {
-            // Omitted code for brevity
-
             var firstAuthor = context.Author.AsNoTracking().First();
 
             var newBook = new Book() { Title = book.Title, AuthorId = firstAuthor.Id };

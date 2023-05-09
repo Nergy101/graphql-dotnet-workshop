@@ -5,10 +5,8 @@ namespace DotNETGraphQLWorkshop.Data.Entities
         public Guid Id { get; set; }
         public string? FullName { get; set; }
 
-        [IsProjected(true)]
-        public ICollection<Book> Books { get; set; }
+        public virtual ICollection<Book> Books { get; set; }
 
-        public int GetBookCount()
-            => Books.Count;
+        public int GetBookCount() => Books.Count;
     }
 }

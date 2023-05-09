@@ -1,4 +1,3 @@
-
 using HotChocolate;
 
 namespace DotNETGraphQLWorkshop.Data.Entities
@@ -9,10 +8,10 @@ namespace DotNETGraphQLWorkshop.Data.Entities
 
         public string? Title { get; set; }
 
-
         [GraphQLIgnore]
         public Guid AuthorId { get; set; }
-        public Author? Author { get; set; }
+
+        public virtual Author? Author { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

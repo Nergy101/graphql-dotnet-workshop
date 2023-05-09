@@ -6,7 +6,7 @@ import {
   GraphQLClient,
   SortEnumType,
 } from './clients/graphql/graphqlApi';
-import { Observable, Subject, BehaviorSubject, Subscription, map } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription, map } from 'rxjs';
 import { QueryRef } from 'apollo-angular';
 
 @Component({

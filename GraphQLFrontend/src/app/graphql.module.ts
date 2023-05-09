@@ -9,18 +9,12 @@ import {
 import { createClient } from 'graphql-ws';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from '@apollo/client/utilities';
+import { environment } from 'src/environments/environment';
 
-const httpUri = 'https://localhost:64147/graphql/';
-const wsUri = 'wss://localhost:64147/graphql/ws';
+const httpLink = createHttpLink({ uri: environment.backendApiUrl });
+const wsLink = new GraphQLWsLink(createClient({ url: environment.backendWSUrl }));
 
-const httpLink = createHttpLink({ uri: httpUri });
-
-const wsLink = new GraphQLWsLink(
-  createClient({
-    url: wsUri,
-  })
-);
-
+// split WS activities to the WS-Url
 const splitLink = split(
   ({ query }: any) => {
     const definition = getMainDefinition(query);
@@ -50,4 +44,4 @@ export function createApollo(): ApolloClientOptions<any> {
     },
   ],
 })
-export class GraphQLModule {}
+export class GraphQLModule { }
