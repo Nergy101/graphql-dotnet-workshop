@@ -1,5 +1,9 @@
 using DbUp;
-using DotNETGraphQLWorkshop.API.GraphQL;
+using DotNETGraphQLWorkshop.API.GraphQL.Mutation;
+using DotNETGraphQLWorkshop.API.GraphQL.Mutation.Authors;
+using DotNETGraphQLWorkshop.API.GraphQL.Mutation.Books;
+using DotNETGraphQLWorkshop.API.GraphQL.Query;
+using DotNETGraphQLWorkshop.API.GraphQL.Subscription;
 using DotNETGraphQLWorkshop.Data;
 using DotNETGraphQLWorkshop.Data.Entities;
 using DotNETGraphQLWorkshop.Data.Repositories;
@@ -27,16 +31,23 @@ builder.Services
                       })
     )
     .AddGraphQLServer()
-    // Add Subscription support (WebSockets) Integrate EF
+    // Integrate EF
+    //.AddDefaultTransactionScopeHandler()
     .RegisterDbContext<DataContext>()
+    // Add GraphQL Conventions
+    .AddMutationConventions(applyToAllMutations: true)
     // Add Root GraphQL types
     .AddQueryType<Query>()
     .AddMutationType<Mutation>()
     .AddSubscriptionType<Subscription>()
-    // Add middlewares
+    // Add TypeExtensions
+    .AddTypeExtension<AuthorMutations>()
+    .AddTypeExtension<BookMutations>()
+    // Add GraphQL types
     .AddFiltering()
     .AddProjections()
     .AddSorting()
+    // Add Subscription support (WebSockets)
     .AddInMemorySubscriptions();
 
 var app = builder.Build();
@@ -50,7 +61,7 @@ app.UseRouting();
 
 app.UseEndpoints(endpoints =>
 {
-    app.MapGet("/", () => "Hello GraphQL Demo!");
+    app.MapGet("/", (res) => { res.Response.Redirect("/graphql", true); return Task.CompletedTask; });
     app.MapGraphQLWebSocket();
     endpoints.MapGraphQL();
 });

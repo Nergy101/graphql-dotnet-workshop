@@ -1,6 +1,13 @@
-mutation AddBook($bookInput: CreateBookInput!) {
-  addBook(book: $bookInput) {
-    id
-    title
+mutation AddBook($bookInput: AddBookInput!) {
+  addBook(input: $bookInput) {
+    book {
+      id
+    }
+  }
+}
+
+mutation DeleteBook($deleteBook: DeleteBookInput!) {
+  deleteBook(input: $deleteBook) {
+    uuid
   }
 }

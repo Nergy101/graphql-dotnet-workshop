@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="demodatabase\" />
+    <Folder Include="GraphQL\Mutation\Inputs\" />
   </ItemGroup>
 
   <ItemGroup>

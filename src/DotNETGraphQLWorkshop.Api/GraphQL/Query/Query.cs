@@ -2,7 +2,7 @@ using DotNETGraphQLWorkshop.Data;
 using DotNETGraphQLWorkshop.Data.Entities;
 using DotNETGraphQLWorkshop.Data.Repositories;
 
-namespace DotNETGraphQLWorkshop.API.GraphQL
+namespace DotNETGraphQLWorkshop.API.GraphQL.Query
 {
     public class BooksResult
     {
@@ -38,7 +38,7 @@ namespace DotNETGraphQLWorkshop.API.GraphQL
         [UsePaging(IncludeTotalCount = true, MaxPageSize = 5)]
         [UseFiltering]
         [UseSorting]
-        public IEnumerable<Author> GetAuthors2([Service] DataContext context) => context.Author;
+        public IEnumerable<Author> GetAuthors2([Service] DataContext context) => context.Authors;
 
         [UsePaging(IncludeTotalCount = true, MaxPageSize = 5)]
         [UseFiltering]

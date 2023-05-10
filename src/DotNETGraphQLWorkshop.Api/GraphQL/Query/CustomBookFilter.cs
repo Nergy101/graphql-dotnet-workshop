@@ -1,4 +1,4 @@
-﻿namespace DotNETGraphQLWorkshop.API.GraphQL
+﻿namespace DotNETGraphQLWorkshop.API.GraphQL.Query
 {
     public class CustomBookFilter
     {

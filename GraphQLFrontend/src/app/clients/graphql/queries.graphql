@@ -17,3 +17,30 @@ query BooksSorted($sorting: [BookSortInput!]) {
     }
   }
 }
+
+query PaginatedAuthors(
+  $first: Int
+  $last: Int
+  $before: String
+  $after: String
+) {
+  authors(first: $first, last: $last, before: $before, after: $after) {
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+      startCursor
+      endCursor
+    }
+    edges {
+      cursor
+      node {
+        id
+        fullName
+        books {
+          id
+          title
+        }
+      }
+    }
+  }
+}
