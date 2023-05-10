@@ -1,1 +1,0 @@
-select * from Author order by 1 asc

@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  graphqlapi:
+    image: graphql-app-backend
+    ports:
+      - "81:80"
+  angularclient:
+    image: graphql-app
+    depends_on:
+      - graphqlapi
+    ports:
+      - "4200:80"
