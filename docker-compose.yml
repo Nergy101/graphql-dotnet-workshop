@@ -4,10 +4,18 @@ services:
   graphqlapi:
     image: graphql-app-backend
     ports:
-      - "81:80"
+      - "8080:80"
+    networks:
+      - graphql
   angularclient:
     image: graphql-app
     depends_on:
       - graphqlapi
     ports:
       - "4200:80"
+    networks:
+      - graphql
+
+networks:
+  graphql:
+    driver: bridge
