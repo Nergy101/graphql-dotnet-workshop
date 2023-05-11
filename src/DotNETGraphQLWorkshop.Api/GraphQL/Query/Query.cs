@@ -4,12 +4,6 @@ using DotNETGraphQLWorkshop.Data.Repositories;
 
 namespace DotNETGraphQLWorkshop.API.GraphQL.Query
 {
-    public class BooksResult
-    {
-        public IEnumerable<Book> Books { get; set; }
-        public int Count { get; set; }
-    }
-
     public class Query
     {
         [UseSorting]
@@ -45,8 +39,10 @@ namespace DotNETGraphQLWorkshop.API.GraphQL.Query
         [UseSorting]
         public IEnumerable<Author> GetAuthors([Service] IRepository<Author> authorRepository) => authorRepository.GetAll();
 
+        [GraphQLDescription("Gets a book by id")]
         public Book? GetBook([Service] IRepository<Book> bookRepository, Guid id) => bookRepository.ReadById(id);
 
+        [GraphQLDescription("Gets an author by id")]
         public Author? GetAuthor([Service] IRepository<Author> authorRepository, Guid id) => authorRepository.ReadById(id);
     }
 }

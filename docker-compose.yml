@@ -2,13 +2,13 @@ version: "3"
 
 services:
   graphqlapi:
-    image: graphql-app-backend
+    image: graphql-app-backend:latest
     ports:
       - "8080:80"
     networks:
       - graphql
   angularclient:
-    image: graphql-app
+    image: graphql-app:latest
     depends_on:
       - graphqlapi
     ports:

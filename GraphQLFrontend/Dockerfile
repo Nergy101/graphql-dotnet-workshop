@@ -1,5 +1,5 @@
 # Use node-alpine as the base image
-FROM node:alpine as build
+FROM node:20.1-alpine3.16 as build
 
 # Set the working directory in the container
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build --prod
 
 # Use nginx as the base image
-FROM nginx:alpine
+FROM nginx:1.24.0-alpine-slim
 
 # Copy the built Angular app from the previous stage to the Nginx container
 COPY --from=build /app/dist/graph-qlfrontend /usr/share/nginx/html
