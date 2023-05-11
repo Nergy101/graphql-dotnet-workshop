@@ -23,8 +23,15 @@ export class AppComponent implements OnInit {
   loading = true;
 
   bookTitle?: string;
+  authorId?: string;
 
   books$: Observable<Book[]>;
+
+  pageSize = 5;
+
+  pageNumber = 1;
+  paginationLeft = 1
+  paginationRight = this.paginationLeft + this.pageSize;
 
   authorPage$: Subject<AuthorsConnection> = new Subject<AuthorsConnection>();
 
@@ -34,6 +41,7 @@ export class AppComponent implements OnInit {
 
   lastAuthorCursor: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   firstAuthorCursor: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  totalAuthorCount: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(null);
 
   lastAddedBookTitle$: Observable<string | undefined | null>;
 
@@ -69,24 +77,27 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    await this.fetchBookPage(3);
+    await this.fetchBookPage(this.pageSize);
   }
 
   async fetchBookPage(amount: number): Promise<void> {
-
-    console.log(this.firstAuthorCursor.getValue() ?? "nope", this.lastAuthorCursor.getValue() ?? "nope")
-
     const queryParams = amount > 0 ? { first: amount, after: this.lastAuthorCursor.getValue() } : { last: Math.abs(amount), before: this.firstAuthorCursor.getValue() };
 
-    console.log('fetchBookPage', queryParams)
+    if (amount > 0) {
+      this.pageNumber += 1;
+    } else {
+      this.pageNumber -= 1;
+    }
+
+    this.paginationLeft = (this.pageNumber - 2) * this.pageSize
+    this.paginationRight = (this.pageNumber - 1) * this.pageSize
 
     const pageResult = await lastValueFrom(this.graphqlClient.paginatedAuthors(queryParams)
       .pipe(map(page => page.data.authors as AuthorsConnection)));
 
-    console.log('fetchBookPage result', pageResult.pageInfo.startCursor, pageResult.pageInfo.endCursor);
-
     this.firstAuthorCursor.next(pageResult.pageInfo.startCursor ?? null);
     this.lastAuthorCursor.next(pageResult.pageInfo.endCursor ?? null);
+    this.totalAuthorCount.next(pageResult.totalCount ?? null)
     this.authorPage$.next(pageResult);
   }
 
@@ -100,6 +111,7 @@ export class AppComponent implements OnInit {
         bookInput: {
           book: {
             title: this.bookTitle,
+            authorId: this.authorId,
           }
         },
       } as AddBookMutationVariables)
@@ -107,10 +119,10 @@ export class AppComponent implements OnInit {
   }
 
   async fetchPreviousPage(): Promise<void> {
-    await this.fetchBookPage(-3);
+    await this.fetchBookPage(-this.pageSize);
   }
 
   async fetchNextPage(): Promise<void> {
-    await this.fetchBookPage(3);
+    await this.fetchBookPage(this.pageSize);
   }
 }

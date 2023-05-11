@@ -441,7 +441,7 @@ export type PaginatedAuthorsQueryVariables = Exact<{
 }>;
 
 
-export type PaginatedAuthorsQuery = { __typename?: 'Query', authors?: { __typename?: 'AuthorsConnection', pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename?: 'AuthorsEdge', cursor: string, node: { __typename?: 'Author', id: any, fullName?: string | null, books: Array<{ __typename?: 'Book', id: any, title?: string | null }> } }> | null } | null };
+export type PaginatedAuthorsQuery = { __typename?: 'Query', authors?: { __typename?: 'AuthorsConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: string | null, endCursor?: string | null }, edges?: Array<{ __typename?: 'AuthorsEdge', cursor: string, node: { __typename?: 'Author', id: any, fullName?: string | null, books: Array<{ __typename?: 'Book', id: any, title?: string | null }> } }> | null } | null };
 
 export type BooksAddedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -533,6 +533,7 @@ export const BooksSortedDocument = gql`
 export const PaginatedAuthorsDocument = gql`
     query PaginatedAuthors($first: Int, $last: Int, $before: String, $after: String) {
   authors(first: $first, last: $last, before: $before, after: $after) {
+    totalCount
     pageInfo {
       hasNextPage
       hasPreviousPage

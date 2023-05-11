@@ -25,6 +25,7 @@ query PaginatedAuthors(
   $after: String
 ) {
   authors(first: $first, last: $last, before: $before, after: $after) {
+    totalCount
     pageInfo {
       hasNextPage
       hasPreviousPage

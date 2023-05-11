@@ -8,11 +8,28 @@
   </h1>
 
   <section>
-    <h6>Authors page</h6>
+    <form>
+      <div class="grid">
+        <label for="Title">
+          Title
+          <input type="text" id="Title" name="Title" placeholder="Title" required [(ngModel)]="bookTitle" />
+        </label>
+        <label for="Title">
+          authorId
+          <input type="text" id="Title" name="AuthorId" placeholder="Author Id" required [(ngModel)]="authorId" />
+        </label>
+      </div>
+      <button (click)="addBook()">Add Book</button>
+    </form>
+  </section>
+
+  <section>
+    <h5>Authors page</h5>
+    <h6><span>Showing page {{this.pageNumber - 1}}: {{this.paginationLeft}} - {{this.paginationRight}}</span></h6>
     <table>
       <thead>
         <tr>
-          <th scope="col">Created At</th>
+          <th scope="col">Id</th>
           <th scope="col">Title</th>
         </tr>
       </thead>
@@ -28,57 +45,45 @@
       <button *ngIf="hasNextPage$ | async" (click)="fetchNextPage()">Next</button>
     </div>
   </section>
+
+  <section>
+    <h6>WATCH (GQL CACHE CHANGES)</h6>
+    <button class="outline" (click)="fetchBooks()">Refetch now (default timeout: 10s)</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Created At</th>
+          <th scope="col">Title</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let book of bookWatch$ | async">
+          <td>{{ book.createdAt }}</td>
+          <td>{{ book.title }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h6>FETCH (once)</h6>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Created At</th>
+          <th scope="col">Title</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let book of books$ | async">
+          <td>{{ book.createdAt }}</td>
+          <td>{{ book.title }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 </div>
 
-
-<section>
-  <form>
-    <div class="grid">
-      <label for="Title">
-        Title
-        <input type="text" id="Title" name="Title" placeholder="Title" required [(ngModel)]="bookTitle" />
-      </label>
-    </div>
-    <button (click)="addBook()">Add Book</button>
-  </form>
-</section>
-
-<section>
-  <h6>WATCH (GQL CACHE CHANGES)</h6>
-  <button class="outline" (click)="fetchBooks()">Refetch now (default timeout: 10s)</button>
-
-  <table>
-    <thead>
-      <tr>
-        <th scope="col">Created At</th>
-        <th scope="col">Title</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let book of bookWatch$ | async">
-        <td>{{ book.createdAt }}</td>
-        <td>{{ book.title }}</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
-
-<section>
-  <h6>FETCH (once)</h6>
-  <table>
-    <thead>
-      <tr>
-        <th scope="col">Created At</th>
-        <th scope="col">Title</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let book of books$ | async">
-        <td>{{ book.createdAt }}</td>
-        <td>{{ book.title }}</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
 
 <router-outlet></router-outlet>
