@@ -4,7 +4,7 @@
 
 <div class="container" role="main" *ngIf="!loading">
   <h1>
-    {{ (lastAddedBookTitle$ | async) ?? "No book added yet this session..." }}
+    {{ lastAddedBookTitle() ?? "No book added yet this session..." }}
   </h1>
 
   <section>
@@ -12,11 +12,25 @@
       <div class="grid">
         <label for="Title">
           Title
-          <input type="text" id="Title" name="Title" placeholder="Title" required [(ngModel)]="bookTitle" />
+          <input
+            type="text"
+            id="Title"
+            name="Title"
+            placeholder="Title"
+            required
+            [(ngModel)]="bookTitle"
+          />
         </label>
         <label for="Title">
           authorId
-          <input type="text" id="Title" name="AuthorId" placeholder="Author Id" required [(ngModel)]="authorId" />
+          <input
+            type="text"
+            id="Title"
+            name="AuthorId"
+            placeholder="Author Id"
+            required
+            [(ngModel)]="authorId"
+          />
         </label>
       </div>
       <button (click)="addBook()">Add Book</button>
@@ -25,7 +39,12 @@
 
   <section>
     <h5>Authors page</h5>
-    <h6><span>Showing page {{this.pageNumber - 1}}: {{this.paginationLeft}} - {{this.paginationRight}}</span></h6>
+    <h6>
+      <span
+        >Showing page {{ this.pageNumber - 1 }}: {{ this.paginationLeft }} -
+        {{ this.paginationRight }}</span
+      >
+    </h6>
     <table>
       <thead>
         <tr>
@@ -34,21 +53,29 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let author of authorsOfPage$ | async">
+        <tr *ngFor="let author of authorsOfPage()">
           <td>{{ author.id }}</td>
           <td>{{ author.fullName }}</td>
         </tr>
       </tbody>
     </table>
     <div class="row">
-      <button class="outline" *ngIf="hasPreviousPage$ | async" (click)="fetchPreviousPage()">Previous</button>
-      <button *ngIf="hasNextPage$ | async" (click)="fetchNextPage()">Next</button>
+      <button
+        class="outline"
+        *ngIf="hasPreviousPage()"
+        (click)="fetchPreviousPage()"
+      >
+        Previous
+      </button>
+      <button *ngIf="hasNextPage()" (click)="fetchNextPage()">Next</button>
     </div>
   </section>
 
   <section>
     <h6>WATCH (GQL CACHE CHANGES)</h6>
-    <button class="outline" (click)="fetchBooks()">Refetch now (default timeout: 10s)</button>
+    <button class="outline" (click)="fetchBooks()">
+      Refetch now (default timeout: 10s)
+    </button>
 
     <table>
       <thead>
@@ -58,7 +85,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let book of bookWatch$ | async">
+        <tr *ngFor="let book of bookWatch()">
           <td>{{ book.createdAt }}</td>
           <td>{{ book.title }}</td>
         </tr>
@@ -67,7 +94,7 @@
   </section>
 
   <section>
-    <h6>FETCH (once)</h6>
+    <h6>SIGNAL FETCH (once)</h6>
     <table>
       <thead>
         <tr>
@@ -76,7 +103,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let book of books$ | async">
+        <tr *ngFor="let book of books()">
           <td>{{ book.createdAt }}</td>
           <td>{{ book.title }}</td>
         </tr>
@@ -84,6 +111,5 @@
     </table>
   </section>
 </div>
-
 
 <router-outlet></router-outlet>
